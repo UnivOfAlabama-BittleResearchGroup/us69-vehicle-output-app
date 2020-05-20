@@ -152,7 +152,7 @@ def get_app(sampled_vehicle_ids, best_fit_vehicle, trace_visual, summary_df):
         return dbc.Table.from_dataframe(display_data_table, striped=True, bordered=True, hover=True)
 
 
-    app.layout = html.Div([html_base])
+    return html.Div([html_base])
 
 
 
@@ -165,10 +165,11 @@ if __name__ == "__main__":
     summary_df.set_index(summary_df.iloc[:,0], inplace=True)
     trace_visualisation.sampled_emissions_df = pd.read_csv(os.path.join(APP_PATH, 'data', 'sampled_emissions.csv'))
 
-    get_app(
+    html_div = get_app(
                            sampled_vehicle_ids=trace_visualisation.sampled_emissions_df['vehicle_id'].unique(),
                            best_fit_vehicle='480_8.2',
                            trace_visual=trace_visualisation.trace_visual,
                            summary_df=summary_df)
 
+    app.layout = html_div
     app.run_server(debug=True)
