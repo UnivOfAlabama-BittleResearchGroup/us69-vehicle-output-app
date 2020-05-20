@@ -17,7 +17,7 @@ app.scripts.config.serve_locally = True
 app.css.config.serve_locally = True
 server = app.server
 
-def get_app(app, sampled_vehicle_ids, best_fit_vehicle, trace_visual, summary_df):
+def get_app(sampled_vehicle_ids, best_fit_vehicle, trace_visual, summary_df):
 
     display_data_table = pd.DataFrame(index=[0, 1], columns=['Vehicle ID', 'Distance (miles)', 'Time in Network',
                                                              'Fuel Economy (mpg)'])
@@ -154,7 +154,6 @@ def get_app(app, sampled_vehicle_ids, best_fit_vehicle, trace_visual, summary_df
 
     app.layout = html.Div([html_base])
 
-    return app
 
 
 if __name__ == "__main__":
@@ -166,10 +165,10 @@ if __name__ == "__main__":
     summary_df.set_index(summary_df.iloc[:,0], inplace=True)
     trace_visualisation.sampled_emissions_df = pd.read_csv(os.path.join(APP_PATH, 'data', 'sampled_emissions.csv'))
 
-    finished_app = get_app(app=app,
+    get_app(
                            sampled_vehicle_ids=trace_visualisation.sampled_emissions_df['vehicle_id'].unique(),
                            best_fit_vehicle='480_8.2',
                            trace_visual=trace_visualisation.trace_visual,
                            summary_df=summary_df)
 
-    finished_app.run_server(debug=True)
+    app.run_server(debug=True)
