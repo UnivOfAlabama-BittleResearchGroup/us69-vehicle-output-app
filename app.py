@@ -8,15 +8,6 @@ import plots.trace_visualisation as trace_visualisation
 import pathlib
 import os
 
-APP_PATH = str(pathlib.Path(__file__).parent.resolve())
-
-external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css', dbc.themes.BOOTSTRAP]
-app = dash.Dash(__name__, external_stylesheets=external_stylesheets)
-app.config.suppress_callback_exceptions = True
-app.scripts.config.serve_locally = True
-app.css.config.serve_locally = True
-server = app.server
-
 def get_app(sampled_vehicle_ids, best_fit_vehicle, trace_visual, summary_df):
 
     display_data_table = pd.DataFrame(index=[0, 1], columns=['Vehicle ID', 'Distance (miles)', 'Time in Network',
@@ -155,8 +146,16 @@ def get_app(sampled_vehicle_ids, best_fit_vehicle, trace_visual, summary_df):
     return html.Div([html_base])
 
 
-
 if __name__ == "__main__":
+
+    APP_PATH = str(pathlib.Path(__file__).parent.resolve())
+
+    external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css', dbc.themes.BOOTSTRAP]
+    app = dash.Dash(__name__, external_stylesheets=external_stylesheets)
+    app.config.suppress_callback_exceptions = True
+    app.scripts.config.serve_locally = True
+    app.css.config.serve_locally = True
+
 
     summary_df = pd.read_csv(os.path.join(APP_PATH, 'data', 'summary_df.csv'), header=[0, 1],
                              skipinitialspace=True,
@@ -172,4 +171,5 @@ if __name__ == "__main__":
                            summary_df=summary_df)
 
     app.layout = html_div
+    server = app.server
     app.run_server(debug=True)
