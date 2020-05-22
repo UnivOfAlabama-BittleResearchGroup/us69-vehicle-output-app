@@ -29,9 +29,14 @@ html_base = html.Div(id='base_page', style=styles.CONTENT_STYLE)
 
 #app.layout = html.Div([trajectory_page.html_base])
 
+# -------------------------------------------------------------------------------------------------------
+#                                  Setting the app layout and server
+# -------------------------------------------------------------------------------------------------------
 app.layout = html.Div([dcc.Location(id="url"), sidebar, html_base])
-
-
+server = app.server
+# -------------------------------------------------------------------------------------------------------
+#
+# -------------------------------------------------------------------------------------------------------
 @app.callback(
     [dash.dependencies.Output(f"page-{i}-link", "active") for i in range(1, 3)],
     [dash.dependencies.Input("url", "pathname")],
@@ -56,5 +61,8 @@ def render_content(pathname):
 
 
 if __name__ == "__main__":
+
+    app.layout = html.Div([dcc.Location(id="url"), sidebar, html_base])
+    server = app.server
 
     app.run_server(debug=True)
