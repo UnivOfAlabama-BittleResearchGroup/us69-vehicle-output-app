@@ -4,8 +4,15 @@ import plotly.graph_objects as go
 import plotly.figure_factory as ff
 from index import APP_PATH
 import numpy as np
+import math
 
 data_dir = os.path.join(APP_PATH, 'data', 'sample_analysis')
+
+shortest_trip_coords = [[-287.69, -175.55], [97.73, -227.72]]
+
+shortest_trip_length = math.sqrt((shortest_trip_coords[0][0] - shortest_trip_coords[1][0]) ** 2
+                                 + (shortest_trip_coords[0][1] - shortest_trip_coords[1][1]) ** 2) * \
+                                 0.000621371 # Meters to Miles conversion
 
 
 def plot_pdf(sample_percent1, sample_percent2, plot_var, plot_var2):
@@ -17,10 +24,12 @@ def plot_pdf(sample_percent1, sample_percent2, plot_var, plot_var2):
 
     group_labels = [label1, label2]
 
-    colors = ['slategray', 'magenta']
+    colors = ['magenta', 'slategray']
 
-    x1 = df1[(plot_var, plot_var2)].iloc[2:].replace([np.inf, -np.inf], np.nan)
-    x2 = df2[(plot_var, plot_var2)].iloc[2:].replace([np.inf, -np.inf], np.nan)
+    x1 = df1.loc[df1[('distance', 'total')] > shortest_trip_length][(plot_var, plot_var2)].iloc[2:]. \
+        replace([np.inf, -np.inf], np.nan)
+    x2 = df2.loc[df2[('distance', 'total')] > shortest_trip_length][(plot_var, plot_var2)].iloc[2:]. \
+        replace([np.inf, -np.inf], np.nan)
 
     x1 = x1.dropna()
     x2 = x2.dropna()
@@ -28,12 +37,14 @@ def plot_pdf(sample_percent1, sample_percent2, plot_var, plot_var2):
     bin_size = round((max(x1 + x2) - min(x1 + x2)) / 100, 2)
     # try:
     fig = ff.create_distplot([x1, x2], group_labels, bin_size=bin_size,
-                                 curve_type='normal',
-                                 histnorm='probability density',  # override default 'kde'
-                                 colors=colors)
+                             curve_type='normal',
+                             histnorm='probability density',  # override default 'kde'
+                             colors=colors)
+
     # except RuntimeError:
     #     print('help')
     #     x = 1
+
 
     fig.add_annotation(
         x=df1[(plot_var, plot_var2)].iloc[1],
@@ -54,22 +65,6 @@ def plot_pdf(sample_percent1, sample_percent2, plot_var, plot_var2):
         ay=-60
     )
 
-    # fig.update_annotations([dict(
-    #     xref="x",
-    #     yref="y",
-    #     showarrow=True,
-    #     arrowhead=7,
-    #     ax=-20,
-    #     ay=-40
-    # ),
-    #     dict(
-    #         xref="x",
-    #         yref="y",
-    #         showarrow=True,
-    #         arrowhead=7,
-    #         ax=20,
-    #         ay=-40
-    #     )
-    # ])
+    fig.update_layout(yaxis=dict(title="Probability Density", exponentformat='E'))
 
     return fig
