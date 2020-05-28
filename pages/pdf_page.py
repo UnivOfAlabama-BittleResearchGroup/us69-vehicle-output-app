@@ -7,7 +7,7 @@ from styles import styles
 import pandas as pd
 from plots import pdf
 
-sample_range = range(5, 105, 5)
+sample_range = [1, 2, 3, 4] + list(range(5, 105, 5))
 
 col_level_one = ['vehicle_CO2', 'vehicle_CO', 'vehicle_HC', 'vehicle_NOx', 'vehicle_PMx', 'vehicle_electricity']
 col_level_two = ['total', 'average_per_step', 'per_100km']

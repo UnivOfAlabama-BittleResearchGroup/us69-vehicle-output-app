@@ -16,6 +16,7 @@ shortest_trip_length = math.sqrt((shortest_trip_coords[0][0] - shortest_trip_coo
 
 
 def plot_pdf(sample_percent1, sample_percent2, plot_var, plot_var2):
+
     df1 = pd.read_csv(os.path.join(data_dir, sample_percent1, 'data_summary.csv'), header=[0, 1], index_col=0)
     df2 = pd.read_csv(os.path.join(data_dir, sample_percent2, 'data_summary.csv'), header=[0, 1], index_col=0)
 
